@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace App6
@@ -20,90 +9,97 @@ namespace App6
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
+        private DateTimeOffset _date;
+
+        public DateTimeOffset Date
+        {
+            get { return _date; }
+            set
+            {
+                _date = value;
+                SetSaison(Date);
+            }
+        }
         public MainPage()
         {
-            this.InitializeComponent();
-            set_saison(this.DateP);
+            InitializeComponent();
+            Date = DateTimeOffset.Now;
         }
 
         private void DatePicker_OnDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
             var pick = sender as DatePicker;
-            set_saison(pick);
+            if (pick != null) Date = pick.Date;
         }
 
-        private void set_saison(DatePicker pick)
+        private void SetSaison(DateTimeOffset date)
         {
-            if (pick != null)
+            if ((date.Month == 12 && date.Day >= 22) || (date.Month <= 3 && date.Day < 20))
             {
-                DateTimeOffset date = pick.Date;
-                if ((date.Month == 12 && date.Day >= 22) || (date.Month <= 3 && date.Day < 20))
+                SetHiver();
+            }
+            else if (date.Month >= 3 && date.Month <= 6)
+            {
+                if (date.Month == 3 && date.Day < 20)
                 {
-                    set_hiver();
+                    SetHiver();
                 }
-                else if (date.Month >= 3 && date.Month <= 6)
+                else if (date.Month == 6 && date.Day > 20)
                 {
-                    if (date.Month == 3 && date.Day < 20)
-                    {
-                        set_hiver();
-                    }
-                    else if (date.Month == 6 && date.Day > 20)
-                    {
-                        set_ete();
-                    }
-                    else
-                    {
-                        set_printemps();
-                    }
-                }
-                else if (date.Month >= 6 && date.Month <= 9)
-                {
-                    if (date.Month == 6 && date.Day < 21)
-                    {
-                        set_printemps();
-                    }
-                    else if (date.Month == 9 && date.Day > 21)
-                    {
-                        set_automne();
-                    }
-                    else
-                    {
-                        set_ete();
-                    }
+                    SetEte();
                 }
                 else
                 {
-                    set_automne();
+                    SetPrintemps();
                 }
+            }
+            else if (date.Month >= 6 && date.Month <= 9)
+            {
+                if (date.Month == 6 && date.Day < 21)
+                {
+                    SetPrintemps();
+                }
+                else if (date.Month == 9 && date.Day > 21)
+                {
+                    SetAutomne();
+                }
+                else
+                {
+                    SetEte();
+                }
+            }
+            else
+            {
+                SetAutomne();
             }
         }
 
-        private void set_hiver()
+        private void SetHiver()
         {
             BitmapImage bm = new BitmapImage(new Uri("ms-appx:///Assets/flocon.jpg", UriKind.RelativeOrAbsolute));
-            this.Saison.Source = (ImageSource)bm;
-            this.SaisonText.Text = "HIVER";
+            Saison.Source = bm;
+            SaisonText.Text = "HIVER";
         }
-        private void set_printemps()
+        private void SetPrintemps()
         {
             BitmapImage bm = new BitmapImage(new Uri("ms-appx:///Assets/fleur.png", UriKind.RelativeOrAbsolute));
-            this.Saison.Source = (ImageSource)bm;
-            this.SaisonText.Text = "PRINTEMPS";
+            Saison.Source = bm;
+            SaisonText.Text = "PRINTEMPS";
         }
-        private void set_ete()
+        private void SetEte()
         {
             BitmapImage bm = new BitmapImage(new Uri("ms-appx:///Assets/soleil.jpg", UriKind.RelativeOrAbsolute));
-            this.Saison.Source = (ImageSource)bm;
-            this.SaisonText.Text = "ETE";
+            Saison.Source = bm;
+            SaisonText.Text = "ETE";
         }
 
-        private void set_automne()
+        private void SetAutomne()
         {
             BitmapImage bm = new BitmapImage(new Uri("ms-appx:///Assets/feuille.jpg", UriKind.RelativeOrAbsolute));
-            this.Saison.Source = (ImageSource)bm;
-            this.SaisonText.Text = "AUTOMNE";
+            Saison.Source = bm;
+            SaisonText.Text = "AUTOMNE";
         }
     }
 }

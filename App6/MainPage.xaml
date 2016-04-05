@@ -8,8 +8,8 @@
     mc:Ignorable="d"
     >
     <StackPanel VerticalAlignment="Center">
-        <Image Name="Saison" Source="Assets/flocon.jpg" MaxHeight="120"></Image>
-        <TextBlock Name="SaisonText" Text="HIVER" HorizontalAlignment="Center"/>
+        <Image Name="Saison" MaxHeight="120"></Image>
+        <TextBlock Name="SaisonText" HorizontalAlignment="Center"/>
         <DatePicker HorizontalAlignment="Center"
 		    VerticalAlignment="Bottom"
             Name="DateP"
